@@ -14,6 +14,18 @@ const candyColors = [
 const App = () => {
   const [currentColorArrangemnt, setCurrentColorArrangement] = useState([])
 
+  const checkForColumnOfThree = () => {
+    for(let i=0; i< 47; i++){ //the 47 represents the 47th square in the grid
+      const columnOfThree = [i, i + width, i + width * 2] 
+      const decidedColor = currentColorArrangemnt[i];
+
+      if(columnOfThree.every(square => currentColorArrangemnt[square] === decidedColor)){ //this is comparing the three squares in the column is the same as the first square => returning a boolean
+        columnOfThree.forEach(square => currentColorArrangemnt[square] = '') //if the colors are a match, then replace the squares with an empty string
+      }
+    }
+  }
+
+
   const createBoard = () => {
     const randomColorArrangement = []
     for(let i=0; i < width * width; i++){
@@ -27,6 +39,16 @@ const App = () => {
   useEffect(() => {
     createBoard()
   }, [])
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      checkForColumnOfThree()
+      setCurrentColorArrangement([...currentColorArrangemnt]) //the three dots expands an array into individual elements and putting it back into the array
+    }, 100)
+    return () => clearInterval(timer)
+    
+
+  }, [checkForColumnOfThree, currentColorArrangemnt])
   
   console.log(currentColorArrangemnt)
 
@@ -34,10 +56,10 @@ const App = () => {
     <div className="App">
       <div className="game">
         {currentColorArrangemnt.map((candyColor, index) => (
-          // eslint-disable-next-line jsx-a11y/alt-text
           <img 
             key={index}
             style={{backgroundColor: candyColor}}
+            alt={candyColor}
           ></img>
         ))}
       </div>
