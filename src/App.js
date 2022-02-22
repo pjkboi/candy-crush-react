@@ -71,7 +71,15 @@ const App = () => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const moveIntoSquareBelow = () => {
     for(let i = 0; i< 64 - width; i++){
-      if(currentColorArrangemnt[i] + width === ''){
+      const firstRow = [0, 1, 2, 3, 4, 5, 6, 7]
+      const isFirstRow = firstRow.includes(i)
+
+      if(isFirstRow && currentColorArrangemnt[i] === ''){
+        let randomNumber = Math.floor(Math.random() * candyColors.length)
+        currentColorArrangemnt[i] = candyColors[randomNumber]
+      }
+
+      if(currentColorArrangemnt[i + width]  === ''){
         currentColorArrangemnt[i + width] = currentColorArrangemnt[i]
         currentColorArrangemnt[i] = ''
       }
