@@ -16,7 +16,7 @@ const App = () => {
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const checkForColumnOfThree = () => {
-    for(let i=0; i< 47; i++){ //the 47 represents the 47th square in the grid
+    for(let i=0; i<= 47; i++){ //the 47 represents the 47th square in the grid
       const columnOfThree = [i, i + width, i + width * 2] 
       const decidedColor = currentColorArrangemnt[i];
 
@@ -28,7 +28,7 @@ const App = () => {
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const checkForColumnOfFour = () => {
-    for(let i=0; i< 39; i++){ //the 39 represents the 47th square in the grid
+    for(let i=0; i<= 39; i++){ //the 39 represents the 47th square in the grid
       const columnOfFour = [i, i + width, i + width * 2, i + width * 3] 
       const decidedColor = currentColorArrangemnt[i];
 
@@ -70,7 +70,7 @@ const App = () => {
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const moveIntoSquareBelow = () => {
-    for(let i = 0; i< 64 - width; i++){
+    for(let i = 0; i<= 55; i++){
       const firstRow = [0, 1, 2, 3, 4, 5, 6, 7]
       const isFirstRow = firstRow.includes(i)
 
@@ -86,6 +86,17 @@ const App = () => {
     }
   }
 
+  const dragStart = (e) => {
+    console.log(e.target)
+    console.log('drag start')
+  }
+
+  const dragDrop = () => {
+    console.log('drag Drop')
+  }
+  const dragEnd = () => {
+    console.log('drag end')
+  }
   const createBoard = () => {
     const randomColorArrangement = []
     for(let i=0; i < width * width; i++){
@@ -114,7 +125,6 @@ const App = () => {
 
   }, [checkForColumnOfFour, checkForRowOfFour, checkForColumnOfThree, checkForRowOfThree, moveIntoSquareBelow, currentColorArrangemnt])
   
-  console.log(currentColorArrangemnt)
 
   return (
     <div className="App">
@@ -124,6 +134,14 @@ const App = () => {
             key={index}
             style={{backgroundColor: candyColor}}
             alt={candyColor}
+            data-id={index}
+            draggable={true}
+            onDragStart={dragStart}
+            onDragOver={(e) => e.preventDefault()}
+            onDragEnter={(e) => e.preventDefault()}
+            onDragLeave={(e) => e.preventDefault()}
+            onDrop={dragDrop}
+            onDragEnd={dragEnd}
           ></img>
         ))}
       </div>
