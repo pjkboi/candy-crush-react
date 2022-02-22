@@ -38,36 +38,45 @@ const App = () => {
     }
   }
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    const checkForRowOfThree = () => {
-      for(let i=0; i< 64; i++){ //the 64 represents all 64 squares in the grid
-        const rowOfThree = [i, i + 1, i + 2] 
-        const decidedColor = currentColorArrangemnt[i];
-        const notValid = [6, 7, 14, 15, 22, 23, 30, 31, 38, 39, 46, 47, 54, 55, 63, 64] //these are the squares in the grid that are redundant to check
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const checkForRowOfThree = () => {
+    for(let i=0; i< 64; i++){ //the 64 represents all 64 squares in the grid
+      const rowOfThree = [i, i + 1, i + 2] 
+      const decidedColor = currentColorArrangemnt[i];
+      const notValid = [6, 7, 14, 15, 22, 23, 30, 31, 38, 39, 46, 47, 54, 55, 63, 64] //these are the squares in the grid that are redundant to check
 
-        if(notValid.includes(i)) continue
-  
-        if(rowOfThree.every(square => currentColorArrangemnt[square] === decidedColor)){ //this is comparing the three squares in the row is the same as the first square => returning a boolean
-          rowOfThree.forEach(square => currentColorArrangemnt[square] = '') //if the colors are a match, then replace the squares with an empty string
-        }
+      if(notValid.includes(i)) continue
+
+      if(rowOfThree.every(square => currentColorArrangemnt[square] === decidedColor)){ //this is comparing the three squares in the row is the same as the first square => returning a boolean
+        rowOfThree.forEach(square => currentColorArrangemnt[square] = '') //if the colors are a match, then replace the squares with an empty string
       }
     }
+  }
 
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-        const checkForRowOfFour = () => {
-          for(let i=0; i< 64; i++){ //the 64 represents all 64 squares in the grid
-            const rowOfFour = [i, i + 1, i + 2, i + 3] 
-            const decidedColor = currentColorArrangemnt[i];
-            const notValid = [5, 6, 7, 13, 14, 15, 21, 22, 23, 29, 30, 31, 37, 38, 39, 45, 46, 47, 53, 54, 55, 62, 63, 64] //these are the squares in the grid that are redundant to check
-    
-            if(notValid.includes(i)) continue
-      
-            if(rowOfFour.every(square => currentColorArrangemnt[square] === decidedColor)){ //this is comparing the three squares in the row is the same as the first square => returning a boolean
-              rowOfFour.forEach(square => currentColorArrangemnt[square] = '') //if the colors are a match, then replace the squares with an empty string
-            }
-          }
-        }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const checkForRowOfFour = () => {
+    for(let i=0; i< 64; i++){ //the 64 represents all 64 squares in the grid
+      const rowOfFour = [i, i + 1, i + 2, i + 3] 
+      const decidedColor = currentColorArrangemnt[i];
+      const notValid = [5, 6, 7, 13, 14, 15, 21, 22, 23, 29, 30, 31, 37, 38, 39, 45, 46, 47, 53, 54, 55, 62, 63, 64] //these are the squares in the grid that are redundant to check
 
+      if(notValid.includes(i)) continue
+
+      if(rowOfFour.every(square => currentColorArrangemnt[square] === decidedColor)){ //this is comparing the three squares in the row is the same as the first square => returning a boolean
+        rowOfFour.forEach(square => currentColorArrangemnt[square] = '') //if the colors are a match, then replace the squares with an empty string
+      }
+    }
+  }
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const moveIntoSquareBelow = () => {
+    for(let i = 0; i< 64 - width; i++){
+      if(currentColorArrangemnt[i] + width === ''){
+        currentColorArrangemnt[i + width] = currentColorArrangemnt[i]
+        currentColorArrangemnt[i] = ''
+      }
+    }
+  }
 
   const createBoard = () => {
     const randomColorArrangement = []
@@ -89,12 +98,13 @@ const App = () => {
       checkForRowOfFour()
       checkForColumnOfThree()
       checkForRowOfThree()
+      moveIntoSquareBelow()
       setCurrentColorArrangement([...currentColorArrangemnt]) //the three dots expands an array into individual elements and putting it back into the array
     }, 100)
     return () => clearInterval(timer)
     
 
-  }, [checkForColumnOfFour, checkForRowOfFour, checkForColumnOfThree, checkForRowOfThree, currentColorArrangemnt])
+  }, [checkForColumnOfFour, checkForRowOfFour, checkForColumnOfThree, checkForRowOfThree, moveIntoSquareBelow, currentColorArrangemnt])
   
   console.log(currentColorArrangemnt)
 
