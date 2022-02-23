@@ -13,6 +13,8 @@ const candyColors = [
 
 const App = () => {
   const [currentColorArrangemnt, setCurrentColorArrangement] = useState([])
+  const [ squareBeingDragged, setSquareBeingDragged] = useState(null)
+  const [ squareBeingReplaced, setSquareBeingReplaced] = useState(null)
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const checkForColumnOfThree = () => {
@@ -22,6 +24,7 @@ const App = () => {
 
       if(columnOfThree.every(square => currentColorArrangemnt[square] === decidedColor)){ //this is comparing the three squares in the column is the same as the first square => returning a boolean
         columnOfThree.forEach(square => currentColorArrangemnt[square] = '') //if the colors are a match, then replace the squares with an empty string
+        return true
       }
     }
   }
@@ -34,6 +37,7 @@ const App = () => {
 
       if(columnOfFour.every(square => currentColorArrangemnt[square] === decidedColor)){ //this is comparing the fours squares in the column is the same as the first square => returning a boolean
         columnOfFour.forEach(square => currentColorArrangemnt[square] = '') //if the colors are a match, then replace the squares with an empty string
+        return true
       }
     }
   }
@@ -49,6 +53,7 @@ const App = () => {
 
       if(rowOfThree.every(square => currentColorArrangemnt[square] === decidedColor)){ //this is comparing the three squares in the row is the same as the first square => returning a boolean
         rowOfThree.forEach(square => currentColorArrangemnt[square] = '') //if the colors are a match, then replace the squares with an empty string
+        return true
       }
     }
   }
@@ -64,6 +69,7 @@ const App = () => {
 
       if(rowOfFour.every(square => currentColorArrangemnt[square] === decidedColor)){ //this is comparing the three squares in the row is the same as the first square => returning a boolean
         rowOfFour.forEach(square => currentColorArrangemnt[square] = '') //if the colors are a match, then replace the squares with an empty string
+        return true
       }
     }
   }
@@ -89,13 +95,47 @@ const App = () => {
   const dragStart = (e) => {
     console.log(e.target)
     console.log('drag start')
+    setSquareBeingDragged(e.target)
   }
 
-  const dragDrop = () => {
+  const dragDrop = (e) => {
     console.log('drag Drop')
+    setSquareBeingReplaced(e.target)
   }
-  const dragEnd = () => {
+  const dragEnd = (e) => {
     console.log('drag end')
+
+    const squareBeingDraggedId = parseInt(squareBeingDragged.getAttribute('data-id'))
+    const squareBeingReplacedId = parseInt(squareBeingReplaced.getAttribute('data-id'))
+
+    currentColorArrangemnt[squareBeingReplacedId] = squareBeingDragged.style.backgroundColor
+    currentColorArrangemnt[squareBeingDraggedId] = squareBeingReplaced.style.backgroundColor
+
+    console.log(squareBeingDraggedId, squareBeingReplacedId)
+
+    const validMoves = [ //these are the potential valid moves in the game 
+      squareBeingDraggedId -1, 
+      squareBeingDraggedId - width,
+      squareBeingDraggedId + 1, 
+      squareBeingDraggedId + width
+    ]
+
+    const validMove = validMoves.includes(squareBeingReplacedId) //comparing the square with our valid moves
+
+    const isAColumnOfFour = checkForColumnOfFour()
+    const isARowOfFour = checkForRowOfFour()
+    const isAColumnOfThree = checkForColumnOfThree()
+    const isARowOfThree = checkForRowOfThree()
+
+    if(squareBeingReplacedId && validMove && (isAColumnOfFour || isAColumnOfThree || isARowOfFour || isARowOfThree)){
+      setSquareBeingDragged(null)
+      setSquareBeingReplaced(null)
+    } else {
+      currentColorArrangemnt[squareBeingReplacedId] = squareBeingReplaced.style.backgroundColor
+      currentColorArrangemnt[squareBeingDraggedId] = squareBeingDragged.style.backgroundColor
+      setCurrentColorArrangement([...currentColorArrangemnt])
+    }
+
   }
   const createBoard = () => {
     const randomColorArrangement = []
