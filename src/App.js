@@ -1,4 +1,5 @@
 import {useEffect, useState } from 'react'
+import ScoreBoard from './components/ScoreBoard'
 
 const width = 8
 const candyColors = [
@@ -15,14 +16,17 @@ const App = () => {
   const [currentColorArrangemnt, setCurrentColorArrangement] = useState([])
   const [ squareBeingDragged, setSquareBeingDragged] = useState(null)
   const [ squareBeingReplaced, setSquareBeingReplaced] = useState(null)
+  const [scoreDisplay, setScoreDisplay] = useState(0)
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const checkForColumnOfThree = () => {
     for(let i=0; i<= 47; i++){ //the 47 represents the 47th square in the grid
       const columnOfThree = [i, i + width, i + width * 2] 
       const decidedColor = currentColorArrangemnt[i];
+      const isBlank = currentColorArrangemnt[i] === ''
 
-      if(columnOfThree.every(square => currentColorArrangemnt[square] === decidedColor)){ //this is comparing the three squares in the column is the same as the first square => returning a boolean
+      if(columnOfThree.every(square => currentColorArrangemnt[square] === decidedColor && !isBlank)){ //this is comparing the three squares in the column is the same as the first square => returning a boolean
+        setScoreDisplay((score) => score + 3)
         columnOfThree.forEach(square => currentColorArrangemnt[square] = '') //if the colors are a match, then replace the squares with an empty string
         return true
       }
@@ -34,8 +38,10 @@ const App = () => {
     for(let i=0; i<= 39; i++){ //the 39 represents the 47th square in the grid
       const columnOfFour = [i, i + width, i + width * 2, i + width * 3] 
       const decidedColor = currentColorArrangemnt[i];
+      const isBlank = currentColorArrangemnt[i] === ''
 
-      if(columnOfFour.every(square => currentColorArrangemnt[square] === decidedColor)){ //this is comparing the fours squares in the column is the same as the first square => returning a boolean
+      if(columnOfFour.every(square => currentColorArrangemnt[square] === decidedColor && !isBlank)){ //this is comparing the fours squares in the column is the same as the first square => returning a boolean
+        setScoreDisplay((score) => score + 4)
         columnOfFour.forEach(square => currentColorArrangemnt[square] = '') //if the colors are a match, then replace the squares with an empty string
         return true
       }
@@ -48,10 +54,12 @@ const App = () => {
       const rowOfThree = [i, i + 1, i + 2] 
       const decidedColor = currentColorArrangemnt[i];
       const notValid = [6, 7, 14, 15, 22, 23, 30, 31, 38, 39, 46, 47, 54, 55, 63, 64] //these are the squares in the grid that are redundant to check
+      const isBlank = currentColorArrangemnt[i] === ''
 
       if(notValid.includes(i)) continue
 
-      if(rowOfThree.every(square => currentColorArrangemnt[square] === decidedColor)){ //this is comparing the three squares in the row is the same as the first square => returning a boolean
+      if(rowOfThree.every(square => currentColorArrangemnt[square] === decidedColor && !isBlank)){ //this is comparing the three squares in the row is the same as the first square => returning a boolean
+        setScoreDisplay((score) => score + 3)
         rowOfThree.forEach(square => currentColorArrangemnt[square] = '') //if the colors are a match, then replace the squares with an empty string
         return true
       }
@@ -64,10 +72,12 @@ const App = () => {
       const rowOfFour = [i, i + 1, i + 2, i + 3] 
       const decidedColor = currentColorArrangemnt[i];
       const notValid = [5, 6, 7, 13, 14, 15, 21, 22, 23, 29, 30, 31, 37, 38, 39, 45, 46, 47, 53, 54, 55, 62, 63, 64] //these are the squares in the grid that are redundant to check
+      const isBlank = currentColorArrangemnt[i] === ''
 
       if(notValid.includes(i)) continue
 
-      if(rowOfFour.every(square => currentColorArrangemnt[square] === decidedColor)){ //this is comparing the three squares in the row is the same as the first square => returning a boolean
+      if(rowOfFour.every(square => currentColorArrangemnt[square] === decidedColor && !isBlank)){ //this is comparing the three squares in the row is the same as the first square => returning a boolean
+        setScoreDisplay((score) => score + 4)
         rowOfFour.forEach(square => currentColorArrangemnt[square] = '') //if the colors are a match, then replace the squares with an empty string
         return true
       }
@@ -92,18 +102,16 @@ const App = () => {
     }
   }
 
+  console.log(scoreDisplay)
+
   const dragStart = (e) => {
-    console.log(e.target)
-    console.log('drag start')
     setSquareBeingDragged(e.target)
   }
 
   const dragDrop = (e) => {
-    console.log('drag Drop')
     setSquareBeingReplaced(e.target)
   }
-  const dragEnd = (e) => {
-    console.log('drag end')
+  const dragEnd = () => {
 
     const squareBeingDraggedId = parseInt(squareBeingDragged.getAttribute('data-id'))
     const squareBeingReplacedId = parseInt(squareBeingReplaced.getAttribute('data-id'))
@@ -111,7 +119,7 @@ const App = () => {
     currentColorArrangemnt[squareBeingReplacedId] = squareBeingDragged.style.backgroundColor
     currentColorArrangemnt[squareBeingDraggedId] = squareBeingReplaced.style.backgroundColor
 
-    console.log(squareBeingDraggedId, squareBeingReplacedId)
+
 
     const validMoves = [ //these are the potential valid moves in the game 
       squareBeingDraggedId -1, 
@@ -168,6 +176,7 @@ const App = () => {
 
   return (
     <div className="App">
+      <ScoreBoard score={scoreDisplay}></ScoreBoard>
       <div className="game">
         {currentColorArrangemnt.map((candyColor, index) => (
           <img 
