@@ -183,6 +183,7 @@ const App = () => {
 
   return (
     <div className="App">
+      <div className="title">Pokeball Crush</div>
       <div className="game">
         {currentColorArrangemnt.map((candyColor, index) => (
           <img 

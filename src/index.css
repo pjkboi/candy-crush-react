@@ -1,3 +1,4 @@
+@import url('http://fonts.cdnfonts.com/css/pokemon-solid');
 body{
   display: flex;
   justify-content: center;
@@ -20,7 +21,18 @@ body{
 }
 
 .score-board h1{
+  color: yellow;
+  text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
   display: flex;
-  color: red;
   justify-content: center;
+  font-size: 50px;
+}
+
+.title {
+  color: yellow;
+  text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+  font-family: 'Pokemon Solid', sans-serif;                                         
+  display: flex;
+  justify-content: center;
+  font-size: 80px;
 }
