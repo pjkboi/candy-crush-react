@@ -183,7 +183,6 @@ const App = () => {
 
   return (
     <div className="App">
-      <ScoreBoard score={scoreDisplay}></ScoreBoard>
       <div className="game">
         {currentColorArrangemnt.map((candyColor, index) => (
           <img 
@@ -201,6 +200,7 @@ const App = () => {
           ></img>
         ))}
       </div>
+      <ScoreBoard score={scoreDisplay}></ScoreBoard>
     </div>
   )
 }

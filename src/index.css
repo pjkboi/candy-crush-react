@@ -19,3 +19,8 @@ body{
   height: 70px;
 }
 
+.score-board h1{
+  display: flex;
+  color: red;
+  justify-content: center;
+}
